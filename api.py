@@ -267,7 +267,7 @@ class MyApp(QWidget, Ui_MainWindow):
         while True:
             for cki in self.cookies:
                 for ides in self.ids:
-                        data1 = {
+                    data1 = {
                         'object_id': ides,
                         'object_type': '1',
                         'entry_point': 1,
@@ -345,5 +345,3 @@ if __name__ == '__main__':
         sys.exit(app.exec_())
     except SystemExit:
         pass
-
->>> 
