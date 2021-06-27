@@ -191,7 +191,7 @@ class MyApp(QWidget, Ui_MainWindow):
             for cki in self.cookies:
                 for i in range(0, 10):
                     target_id = str(random.choice(self.targets))
-                    data1 = f'object_id='+target_id+'&object_type=5&entry_point=1&_csrftoken=missing&_uuid=' +                         self.uid+'&is_dark_mode=true&frx_prompt_request_type=1&container_module=profile&location=2'
+                    data1 = f'object_id='+target_id+'&object_type=5&entry_point=1&_csrftoken=missing&_uuid=' +self.uid+'&is_dark_mode=true&frx_prompt_request_type=1&container_module=profile&location=2'
 
                     response = requests.post(
                         'https://i.instagram.com/api/v1/reports/get_frx_prompt/', headers=self.headers, cookies=cki, data=data1)
@@ -200,7 +200,6 @@ class MyApp(QWidget, Ui_MainWindow):
                         continue
                     reporter_id = response.json(
                     )['response']['report_info']['reporter_id']
-
                     responsible_id = response.json(
                     )['response']['report_info']['responsible_id']
                     aaaaa = json.loads(response.json()['response']['context'])
