@@ -29,6 +29,8 @@ class MyApp(QWidget, Ui_MainWindow):
         self.tabWidget.setCurrentIndex(0)
         self.done = 0
         self.bad = 0
+        
+        prxfile = open("proxies.txt",'r').read()
 
         self.grabbedThr = []
 
