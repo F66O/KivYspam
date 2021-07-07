@@ -14,7 +14,7 @@ try:
     import datetime
     import cgitb
     import os
-    import json
+    import json,re
     cgitb.enable(format='text')
 except Exception as e:
     raise
@@ -214,10 +214,9 @@ class MyApp(QWidget, Ui_MainWindow):
             if target in blacklist:
                 autopy.alert.alert("You cant Report This Person!!")
             else:
-                req_id = self.r.get(
-                    f'https://www.instagram.com/{target}/?__a=1', cookies=cookies).json()['logging_page_id'].split('_')[1]
-
-                self.targets.append(req_id)
+                req_id = self.r.get('https://www.instagram.com/'+target,cookies=cookies).text
+                idd = re.search(r'"id":".*?"').group(1)
+                self.targets.append(idd)
 
                 mylist.append(f"added {target} as target you can add more!")
         except:
