@@ -119,6 +119,17 @@ class MyApp(QWidget, Ui_MainWindow):
 
     def addtarget(self):
         threading.Thread(target=self.gettarget).start()
+        
+    def check_banned(self,target_id,cki):
+        
+        req = self.r.get(f"https://i.instagram.com/api/v1/users/{target_id}/info",cookies=cki,headers=self.headers)
+        
+        try:
+            get_name = req.json()['user']['username']
+            
+        except:
+            
+            autopy.alert.alert("banned !!",'Hello Sir!!')
 
     def report_prf(self, target, cki):
         target_id = target
@@ -185,7 +196,7 @@ class MyApp(QWidget, Ui_MainWindow):
             self.done += 1
         else:
             self.bad += 1
-        time.sleep(2)
+            self.check_banned(target,cki)
 
     def gettarget(self):
         blacklist = ['9hea', 'vox_here', '70irl', '7ra8o', '7re8o', 'zixll1', 'z89lr', 'vgbi', 'i.p72',
@@ -267,136 +278,15 @@ class MyApp(QWidget, Ui_MainWindow):
 
                 self.report_prf(target_id, cki)
 
-                if target_id in self.grabbedThr:
-                    pass
-                else:
-                    like_url = 'https://i.instagram.com/api/v1/direct_v2/threads/broadcast/like/'
-
-                    like_data = {
-                        'recipient_users': f'[[{target_id}]]',  # id here
-                        'action': 'send_item',
-                        'is_shh_mode': '0',
-                        'send_attribution': 'message_button',
-                        'client_context': '6817073705950442803',
-                        '_csrftoken': 'missing',
-                        'device_id': 'android-d595db3f5c276071',
-                        'mutation_token': '6817073705950442803',
-                        '_uuid': self.uid,
-                        'offline_threading_id': '6817073705950442803'
-                    }
-
-                    self.headers = {
-                        'X-Pigeon-Session-Id': str(uuid.uuid4()),
-                        'X-IG-Device-ID': str(uuid.uuid4()),
-                        'X-IG-App-Locale': 'en_US',
-                        'X-IG-Device-Locale': 'en_US',
-                        'X-IG-Mapped-Locale': 'en_US',
-                        'X-IG-Connection-Type': 'WIFI',
-                        'X-IG-Capabilities': '3brTvw8=',
-                        'User-Agent': 'Instagram 35.0.0.20.96 Android (28/9; 480dpi; 1080x2137; HUAWEI; JKM-LX1; HWJKM-H; kirin710; en_US; 216817344)',
-                        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-                        'Host': 'i.instagram.com'
-                    }
-                    try:
-                        req = self.r.post(like_url, data=like_data,
-                                          headers=self.headers, cookies=cki)
-
-                        thread_id = req.json()['payload']['thread_id']
-
-                        self.grabbedThr.append(target_id)
-                    except Exception as e:
-                        print(e)
-                        self.bad += 1
-                        break
-
+                
                 for i in range(0, 10):
-                    url = "https://i.instagram.com/api/v1/reports/get_frx_prompt/"
-
-                    data = {
-                        'object_id': f'{thread_id}',  # THREAD ID HERE
-                        'object_type': '4',
-                        'entry_point': '1',
-                        '_csrftoken': 'missing',
-                        '_uuid': self.uid,
-                        'is_dark_mode': 'true',
-                        'frx_prompt_request_type': '1',
-                        'container_module': 'direct_thread_info',
-                        'location': '22',
-                    }
-
-                    req = self.r.post(
-                        url, data=data, headers=self.headers, cookies=cki)
-
-                    reporter_id = req.json(
-                    )['response']['report_info']['reporter_id']
-
-                    responsible_id = req.json(
-                    )['response']['report_info']['responsible_id']
-                    aaaaa = json.loads(req.json()['response']['context'])
-                    jj = json.loads(aaaaa['ixt_context_from_www'])
-                    cc = json.loads(jj['session'])
-                    mapp = cc['extra_data']['sentry_feature_map']
-
-                    if self.reptp == 'ig_spam_v3':
-                        data = 'selected_tag_types=%5B%22ig_spam_v3%22%5D&_csrftoken=missing&_uuid=2461308a-4663-4549-8e82-80bf06c965a3&context=%7B%22tags%22%3A%5B%5D%2C%22ixt_context_from_www%22%3A%22%7B%5C%22schema%5C%22%3A%5C%22ig_frx%5C%22%2C%5C%22session%5C%22%3A%5C%22%7B%5C%5C%5C%22location%5C%5C%5C%22%3A%5C%5C%5C%22id_direct_thread%5C%5C%5C%22%2C%5C%5C%5C%22entry_point%5C%5C%5C%22%3A%5C%5C%5C%22chevron_button%5C%5C%5C%22%2C%5C%5C%5C%22session_id%5C%5C%5C%22%3A%5C%5C%5C%2263f3ff33-72c2-483c-9443-5e7e55ff2f50%5C%5C%5C%22%2C%5C%5C%5C%22tags%5C%5C%5C%22%3A%5B%5D%2C%5C%5C%5C%22object%5C%5C%5C%22%3A%5C%5C%5C%22%7B%5C%5C%5C%5C%5C%5C%5C%22direct_message_thread_id%5C%5C%5C%5C%5C%5C%5C%22%3A%5C%5C%5C%5C%5C%5C%5C%22'+thread_id+'%5C%5C%5C%5C%5C%5C%5C%22%7D%5C%5C%5C%22%2C%5C%5C%5C%22reporter_id%5C%5C%5C%22%3A'+reporter_id+'%2C%5C%5C%5C%22responsible_id%5C%5C%5C%22%3A'+responsible_id+'%2C%5C%5C%5C%22locale%5C%5C%5C%22%3A%5C%5C%5C%22en_US%5C%5C%5C%22%2C%5C%5C%5C%22app_platform%5C%5C%5C%22%3A1%2C%5C%5C%5C%22extra_data%5C%5C%5C%22%3A%7B%5C%5C%5C%22container_module%5C%5C%5C%22%3A%5C%5C%5C%22direct_thread_info%5C%5C%5C%22%2C%5C%5C%5C%22app_version%5C%5C%5C%22%3A%5C%5C%5C%22%28151%2C+0%2C+0%2C+23%2C+120%29%5C%5C%5C%22%2C%5C%5C%5C%22is_dark_mode%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22app_id%5C%5C%5C%22%3A567067343352427%2C%5C%5C%5C%22sentry_feature_map%5C%5C%5C%22%3A%5C%5C%5C%22' + \
-                            mapp+'%5C%5C%5C%5C%5C%5C%5C%2F9rLE%5C%5C%5C%5C%5C%5C%5C%2FKB8vYXBpL3YxL3JlcG9ydHMvZ2V0X2ZyeF9wcm9tcHQvFiwWhOmCjgwA%5C%5C%5C%22%2C%5C%5C%5C%22shopping_session_id%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22logging_extra%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22is_in_holdout%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22preloading_enabled%5C%5C%5C%22%3Anull%7D%2C%5C%5C%5C%22frx_feedback_submitted%5C%5C%5C%22%3Afalse%2C%5C%5C%5C%22additional_data%5C%5C%5C%22%3A%7B%7D%7D%5C%22%2C%5C%22screen%5C%22%3A%5C%22frx_tag_selection_screen%5C%22%2C%5C%22flow_info%5C%22%3A%5C%22%7B%5C%5C%5C%22nt%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22graphql%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22enrollment_info%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22ig%5C%5C%5C%22%3A%5C%5C%5C%22%7B%5C%5C%5C%5C%5C%5C%5C%22ig_container_module%5C%5C%5C%5C%5C%5C%5C%22%3A%5C%5C%5C%5C%5C%5C%5C%22direct_thread_info%5C%5C%5C%5C%5C%5C%5C%22%7D%5C%5C%5C%22%2C%5C%5C%5C%22session_id%5C%5C%5C%22%3A%5C%5C%5C%220e738a2f-0e17-4c94-96e7-5cb0873b5b60%5C%5C%5C%22%7D%5C%22%2C%5C%22previous_state%5C%22%3Anull%7D%22%7D&is_dark_mode=true&frx_prompt_request_type=2'
-                    elif self.reptp == 'ig_self_injury_v3':
-                        data = '_csrftoken=MdIQ1T8gXmbS0F1va8E4W1IGCCR3hCci&_uuid=2461308a-4663-4549-8e82-80bf06c965a3&context=%7B%22tags%22%3A%5B%22ig_its_inappropriate_v1%22%2C%22ig_report_account%22%2C%22ig_its_inappropriate%22%2C%22ig_self_injury_v3%22%5D%2C%22ixt_context_from_www%22%3A%22%7B%5C%22schema%5C%22%3A%5C%22ig_frx%5C%22%2C%5C%22session%5C%22%3A%5C%22%7B%5C%5C%5C%22location%5C%5C%5C%22%3A%5C%5C%5C%22id_direct_thread%5C%5C%5C%22%2C%5C%5C%5C%22entry_point%5C%5C%5C%22%3A%5C%5C%5C%22chevron_button%5C%5C%5C%22%2C%5C%5C%5C%22session_id%5C%5C%5C%22%3A%5C%5C%5C%2297f9b881-e77b-462e-a80f-caece00be761%5C%5C%5C%22%2C%5C%5C%5C%22tags%5C%5C%5C%22%3A%5B%5C%5C%5C%22ig_its_inappropriate_v1%5C%5C%5C%22%2C%5C%5C%5C%22ig_report_account%5C%5C%5C%22%2C%5C%5C%5C%22ig_its_inappropriate%5C%5C%5C%22%2C%5C%5C%5C%22ig_self_injury_v3%5C%5C%5C%22%5D%2C%5C%5C%5C%22object%5C%5C%5C%22%3A%5C%5C%5C%22%7B%5C%5C%5C%5C%5C%5C%5C%22direct_message_thread_id%5C%5C%5C%5C%5C%5C%5C%22%3A%5C%5C%5C%5C%5C%5C%5C%22'+thread_id+'%5C%5C%5C%5C%5C%5C%5C%22%7D%5C%5C%5C%22%2C%5C%5C%5C%22reporter_id%5C%5C%5C%22%3A'+reporter_id+'%2C%5C%5C%5C%22responsible_id%5C%5C%5C%22%3A'+responsible_id + \
-                            '%2C%5C%5C%5C%22locale%5C%5C%5C%22%3A%5C%5C%5C%22en_US%5C%5C%5C%22%2C%5C%5C%5C%22app_platform%5C%5C%5C%22%3A1%2C%5C%5C%5C%22extra_data%5C%5C%5C%22%3A%7B%5C%5C%5C%22container_module%5C%5C%5C%22%3A%5C%5C%5C%22direct_thread_info%5C%5C%5C%22%2C%5C%5C%5C%22app_version%5C%5C%5C%22%3A%5C%5C%5C%22%28151%2C+0%2C+0%2C+23%2C+120%29%5C%5C%5C%22%2C%5C%5C%5C%22is_dark_mode%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22app_id%5C%5C%5C%22%3A567067343352427%2C%5C%5C%5C%22sentry_feature_map%5C%5C%5C%22%3A%5C%5C%5C%22'+mapp + \
-                            '%5C%5C%5C%5C%5C%5C%5C%2F9rLE%5C%5C%5C%5C%5C%5C%5C%2FKB8vYXBpL3YxL3JlcG9ydHMvZ2V0X2ZyeF9wcm9tcHQvFiwWhOmCjgwA%5C%5C%5C%22%2C%5C%5C%5C%22shopping_session_id%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22logging_extra%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22is_in_holdout%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22preloading_enabled%5C%5C%5C%22%3Anull%7D%2C%5C%5C%5C%22frx_feedback_submitted%5C%5C%5C%22%3Afalse%2C%5C%5C%5C%22additional_data%5C%5C%5C%22%3A%7B%7D%7D%5C%22%2C%5C%22screen%5C%22%3A%5C%22frx_policy_education%5C%22%2C%5C%22flow_info%5C%22%3A%5C%22%7B%5C%5C%5C%22nt%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22graphql%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22enrollment_info%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22ig%5C%5C%5C%22%3A%5C%5C%5C%22%7B%5C%5C%5C%5C%5C%5C%5C%22ig_container_module%5C%5C%5C%5C%5C%5C%5C%22%3A%5C%5C%5C%5C%5C%5C%5C%22direct_thread_info%5C%5C%5C%5C%5C%5C%5C%22%7D%5C%5C%5C%22%2C%5C%5C%5C%22session_id%5C%5C%5C%22%3A%5C%5C%5C%22b086aa01-d038-4aac-ac0d-bad7afc24f6a%5C%5C%5C%22%7D%5C%22%2C%5C%22previous_state%5C%22%3Anull%7D%22%7D&is_dark_mode=true&frx_prompt_request_type=4&action_type=2'
-                    elif self.reptp == 'ig_hate_speech_v3':
-
-                        data = '_csrftoken=MdIQ1T8gXmbS0F1va8E4W1IGCCR3hCci&_uuid=2461308a-4663-4549-8e82-80bf06c965a3&context=%7B%22tags%22%3A%5B%22ig_its_inappropriate_v1%22%2C%22ig_report_account%22%2C%22ig_its_inappropriate%22%2C%22ig_hate_speech_v3%22%5D%2C%22ixt_context_from_www%22%3A%22%7B%5C%22schema%5C%22%3A%5C%22ig_frx%5C%22%2C%5C%22session%5C%22%3A%5C%22%7B%5C%5C%5C%22location%5C%5C%5C%22%3A%5C%5C%5C%22id_direct_thread%5C%5C%5C%22%2C%5C%5C%5C%22entry_point%5C%5C%5C%22%3A%5C%5C%5C%22chevron_button%5C%5C%5C%22%2C%5C%5C%5C%22session_id%5C%5C%5C%22%3A%5C%5C%5C%2279fcde40-7117-4093-a948-4f803c53cb18%5C%5C%5C%22%2C%5C%5C%5C%22tags%5C%5C%5C%22%3A%5B%5C%5C%5C%22ig_its_inappropriate_v1%5C%5C%5C%22%2C%5C%5C%5C%22ig_report_account%5C%5C%5C%22%2C%5C%5C%5C%22ig_its_inappropriate%5C%5C%5C%22%2C%5C%5C%5C%22ig_hate_speech_v3%5C%5C%5C%22%5D%2C%5C%5C%5C%22object%5C%5C%5C%22%3A%5C%5C%5C%22%7B%5C%5C%5C%5C%5C%5C%5C%22direct_message_thread_id%5C%5C%5C%5C%5C%5C%5C%22%3A%5C%5C%5C%5C%5C%5C%5C%22'+thread_id+'%5C%5C%5C%5C%5C%5C%5C%22%7D%5C%5C%5C%22%2C%5C%5C%5C%22reporter_id%5C%5C%5C%22%3'+reporter_id+'%2C%5C%5C%5C%22responsible_id%5C%5C%5C%22%3A'+responsible_id + \
-                            '%2C%5C%5C%5C%22locale%5C%5C%5C%22%3A%5C%5C%5C%22en_US%5C%5C%5C%22%2C%5C%5C%5C%22app_platform%5C%5C%5C%22%3A1%2C%5C%5C%5C%22extra_data%5C%5C%5C%22%3A%7B%5C%5C%5C%22container_module%5C%5C%5C%22%3A%5C%5C%5C%22direct_thread_info%5C%5C%5C%22%2C%5C%5C%5C%22app_version%5C%5C%5C%22%3A%5C%5C%5C%22%28151%2C+0%2C+0%2C+23%2C+120%29%5C%5C%5C%22%2C%5C%5C%5C%22is_dark_mode%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22app_id%5C%5C%5C%22%3A567067343352427%2C%5C%5C%5C%22sentry_feature_map%5C%5C%5C%22%3A%5C%5C%5C%22'+mapp + \
-                            '%5C%5C%5C%5C%5C%5C%5C%2F9rLE%5C%5C%5C%5C%5C%5C%5C%2FKB8vYXBpL3YxL3JlcG9ydHMvZ2V0X2ZyeF9wcm9tcHQvFiwWhOmCjgwA%5C%5C%5C%22%2C%5C%5C%5C%22shopping_session_id%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22logging_extra%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22is_in_holdout%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22preloading_enabled%5C%5C%5C%22%3Anull%7D%2C%5C%5C%5C%22frx_feedback_submitted%5C%5C%5C%22%3Afalse%2C%5C%5C%5C%22additional_data%5C%5C%5C%22%3A%7B%7D%7D%5C%22%2C%5C%22screen%5C%22%3A%5C%22frx_policy_education%5C%22%2C%5C%22flow_info%5C%22%3A%5C%22%7B%5C%5C%5C%22nt%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22graphql%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22enrollment_info%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22ig%5C%5C%5C%22%3A%5C%5C%5C%22%7B%5C%5C%5C%5C%5C%5C%5C%22ig_container_module%5C%5C%5C%5C%5C%5C%5C%22%3A%5C%5C%5C%5C%5C%5C%5C%22direct_thread_info%5C%5C%5C%5C%5C%5C%5C%22%7D%5C%5C%5C%22%2C%5C%5C%5C%22session_id%5C%5C%5C%22%3A%5C%5C%5C%221df69f3e-8039-4dcc-bbdf-f6729c35c328%5C%5C%5C%22%7D%5C%22%2C%5C%22previous_state%5C%22%3Anull%7D%22%7D&is_dark_mode=true&frx_prompt_request_type=4&action_type=2'
-
-                    elif self.reptp == 'ig_violence_threat':
-                        data = '_csrftoken=MdIQ1T8gXmbS0F1va8E4W1IGCCR3hCci&_uuid=2461308a-4663-4549-8e82-80bf06c965a3&context=%7B%22tags%22%3A%5B%22ig_its_inappropriate_v1%22%2C%22ig_report_account%22%2C%22ig_its_inappropriate%22%2C%22ig_violence_v3%22%5D%2C%22ixt_context_from_www%22%3A%22%7B%5C%22schema%5C%22%3A%5C%22ig_frx%5C%22%2C%5C%22session%5C%22%3A%5C%22%7B%5C%5C%5C%22location%5C%5C%5C%22%3A%5C%5C%5C%22id_direct_thread%5C%5C%5C%22%2C%5C%5C%5C%22entry_point%5C%5C%5C%22%3A%5C%5C%5C%22chevron_button%5C%5C%5C%22%2C%5C%5C%5C%22session_id%5C%5C%5C%22%3A%5C%5C%5C%2280882a98-26ea-4f0c-b9c8-2f2aa9e791b9%5C%5C%5C%22%2C%5C%5C%5C%22tags%5C%5C%5C%22%3A%5B%5C%5C%5C%22ig_its_inappropriate_v1%5C%5C%5C%22%2C%5C%5C%5C%22ig_report_account%5C%5C%5C%22%2C%5C%5C%5C%22ig_its_inappropriate%5C%5C%5C%22%2C%5C%5C%5C%22ig_violence_v3%5C%5C%5C%22%5D%2C%5C%5C%5C%22object%5C%5C%5C%22%3A%5C%5C%5C%22%7B%5C%5C%5C%5C%5C%5C%5C%22direct_message_thread_id%5C%5C%5C%5C%5C%5C%5C%22%3A%5C%5C%5C%5C%5C%5C%5C%22'+thread_id + \
-                            '%5C%5C%5C%5C%5C%5C%5C%22%7D%5C%5C%5C%22%2C%5C%5C%5C%22reporter_id%5C%5C%5C%22%3A'+reporter_id+'%2C%5C%5C%5C%22responsible_id%5C%5C%5C%22%3A'+responsible_id+'%2C%5C%5C%5C%22locale%5C%5C%5C%22%3A%5C%5C%5C%22en_US%5C%5C%5C%22%2C%5C%5C%5C%22app_platform%5C%5C%5C%22%3A1%2C%5C%5C%5C%22extra_data%5C%5C%5C%22%3A%7B%5C%5C%5C%22container_module%5C%5C%5C%22%3A%5C%5C%5C%22direct_thread_info%5C%5C%5C%22%2C%5C%5C%5C%22app_version%5C%5C%5C%22%3A%5C%5C%5C%22%28151%2C+0%2C+0%2C+23%2C+120%29%5C%5C%5C%22%2C%5C%5C%5C%22is_dark_mode%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22app_id%5C%5C%5C%22%3A567067343352427%2C%5C%5C%5C%22sentry_feature_map%5C%5C%5C%22%3A%5C%5C%5C%22'+mapp + \
-                            '%5C%5C%5C%5C%5C%5C%5C%2F9rLE%5C%5C%5C%5C%5C%5C%5C%2FKB8vYXBpL3YxL3JlcG9ydHMvZ2V0X2ZyeF9wcm9tcHQvFiwWhOmCjgwA%5C%5C%5C%22%2C%5C%5C%5C%22shopping_session_id%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22logging_extra%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22is_in_holdout%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22preloading_enabled%5C%5C%5C%22%3Anull%7D%2C%5C%5C%5C%22frx_feedback_submitted%5C%5C%5C%22%3Afalse%2C%5C%5C%5C%22additional_data%5C%5C%5C%22%3A%7B%7D%7D%5C%22%2C%5C%22screen%5C%22%3A%5C%22frx_policy_education%5C%22%2C%5C%22flow_info%5C%22%3A%5C%22%7B%5C%5C%5C%22nt%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22graphql%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22enrollment_info%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22ig%5C%5C%5C%22%3A%5C%5C%5C%22%7B%5C%5C%5C%5C%5C%5C%5C%22ig_container_module%5C%5C%5C%5C%5C%5C%5C%22%3A%5C%5C%5C%5C%5C%5C%5C%22direct_thread_info%5C%5C%5C%5C%5C%5C%5C%22%7D%5C%5C%5C%22%2C%5C%5C%5C%22session_id%5C%5C%5C%22%3A%5C%5C%5C%22c4c9252d-3435-4ade-a0a4-1483b6052f3d%5C%5C%5C%22%7D%5C%22%2C%5C%22previous_state%5C%22%3Anull%7D%22%7D&is_dark_mode=true&frx_prompt_request_type=4&action_type=2'
-                    elif self.reptp == 'ig_bullying_or_harassment_comment_v3':
-
-                        data = '_csrftoken=MdIQ1T8gXmbS0F1va8E4W1IGCCR3hCci&_uuid=2461308a-4663-4549-8e82-80bf06c965a3&context=%7B%22tags%22%3A%5B%22ig_its_inappropriate_v1%22%2C%22ig_report_account%22%2C%22ig_its_inappropriate%22%2C%22ig_bullying_or_harassment_comment_v3%22%2C%22ig_bullying_or_harassment_me_v3%22%5D%2C%22ixt_context_from_www%22%3A%22%7B%5C%22schema%5C%22%3A%5C%22ig_frx%5C%22%2C%5C%22session%5C%22%3A%5C%22%7B%5C%5C%5C%22location%5C%5C%5C%22%3A%5C%5C%5C%22id_direct_thread%5C%5C%5C%22%2C%5C%5C%5C%22entry_point%5C%5C%5C%22%3A%5C%5C%5C%22chevron_button%5C%5C%5C%22%2C%5C%5C%5C%22session_id%5C%5C%5C%22%3A%5C%5C%5C%22708b9eff-3890-40c8-b1b5-0b1c99fcc8ae%5C%5C%5C%22%2C%5C%5C%5C%22tags%5C%5C%5C%22%3A%5B%5C%5C%5C%22ig_its_inappropriate_v1%5C%5C%5C%22%2C%5C%5C%5C%22ig_report_account%5C%5C%5C%22%2C%5C%5C%5C%22ig_its_inappropriate%5C%5C%5C%22%2C%5C%5C%5C%22ig_bullying_or_harassment_comment_v3%5C%5C%5C%22%2C%5C%5C%5C%22ig_bullying_or_harassment_me_v3%5C%5C%5C%22%5D%2C%5C%5C%5C%22object%5C%5C%5C%22%3A%5C%5C%5C%22%7B%5C%5C%5C%5C%5C%5C%5C%22direct_message_thread_id%5C%5C%5C%5C%5C%5C%5C%22%3A%5C%5C%5C%5C%5C%5C%5C%22'+thread_id+'%5C%5C%5C%5C%5C%5C%5C%22%7D%5C%5C%5C%22%2C%5C%5C%5C%22reporter_id%5C%5C%5C%22%3A'+reporter_id+'%2C%5C%5C%5C%22responsible_id%5C%5C%5C%22%3A'+responsible_id + \
-                            '%2C%5C%5C%5C%22locale%5C%5C%5C%22%3A%5C%5C%5C%22en_US%5C%5C%5C%22%2C%5C%5C%5C%22app_platform%5C%5C%5C%22%3A1%2C%5C%5C%5C%22extra_data%5C%5C%5C%22%3A%7B%5C%5C%5C%22container_module%5C%5C%5C%22%3A%5C%5C%5C%22direct_thread_info%5C%5C%5C%22%2C%5C%5C%5C%22app_version%5C%5C%5C%22%3A%5C%5C%5C%22%28151%2C+0%2C+0%2C+23%2C+120%29%5C%5C%5C%22%2C%5C%5C%5C%22is_dark_mode%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22app_id%5C%5C%5C%22%3A567067343352427%2C%5C%5C%5C%22sentry_feature_map%5C%5C%5C%22%3A%5C%5C%5C%22'+mapp + \
-                            '%5C%5C%5C%5C%5C%5C%5C%2F9rLE%5C%5C%5C%5C%5C%5C%5C%2FKB8vYXBpL3YxL3JlcG9ydHMvZ2V0X2ZyeF9wcm9tcHQvFiwWhOmCjgwA%5C%5C%5C%22%2C%5C%5C%5C%22shopping_session_id%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22logging_extra%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22is_in_holdout%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22preloading_enabled%5C%5C%5C%22%3Anull%7D%2C%5C%5C%5C%22frx_feedback_submitted%5C%5C%5C%22%3Afalse%2C%5C%5C%5C%22additional_data%5C%5C%5C%22%3A%7B%7D%7D%5C%22%2C%5C%22screen%5C%22%3A%5C%22frx_policy_education%5C%22%2C%5C%22flow_info%5C%22%3A%5C%22%7B%5C%5C%5C%22nt%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22graphql%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22enrollment_info%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22ig%5C%5C%5C%22%3A%5C%5C%5C%22%7B%5C%5C%5C%5C%5C%5C%5C%22ig_container_module%5C%5C%5C%5C%5C%5C%5C%22%3A%5C%5C%5C%5C%5C%5C%5C%22direct_thread_info%5C%5C%5C%5C%5C%5C%5C%22%7D%5C%5C%5C%22%2C%5C%5C%5C%22session_id%5C%5C%5C%22%3A%5C%5C%5C%224c34369c-039b-4fa2-9d68-9427a603040a%5C%5C%5C%22%7D%5C%22%2C%5C%22previous_state%5C%22%3Anull%7D%22%7D&is_dark_mode=true&frx_prompt_request_type=4&action_type=2'
-
-                    elif self.reptp == 'ig_nudity_or_pornography_v3':
-
-                        data = 'selected_tag_types=%5B%22ig_nudity_or_pornography_v3%22%5D&_csrftoken=MdIQ1T8gXmbS0F1va8E4W1IGCCR3hCci&_uuid=2461308a-4663-4549-8e82-80bf06c965a3&context=%7B%22tags%22%3A%5B%22ig_its_inappropriate_v1%22%2C%22ig_report_account%22%2C%22ig_its_inappropriate%22%2C%22ig_nudity_v2%22%5D%2C%22ixt_context_from_www%22%3A%22%7B%5C%22schema%5C%22%3A%5C%22ig_frx%5C%22%2C%5C%22session%5C%22%3A%5C%22%7B%5C%5C%5C%22location%5C%5C%5C%22%3A%5C%5C%5C%22id_direct_thread%5C%5C%5C%22%2C%5C%5C%5C%22entry_point%5C%5C%5C%22%3A%5C%5C%5C%22chevron_button%5C%5C%5C%22%2C%5C%5C%5C%22session_id%5C%5C%5C%22%3A%5C%5C%5C%22a37739c6-29f6-4436-8a16-fd59a3ebe281%5C%5C%5C%22%2C%5C%5C%5C%22tags%5C%5C%5C%22%3A%5B%5C%5C%5C%22ig_its_inappropriate_v1%5C%5C%5C%22%2C%5C%5C%5C%22ig_report_account%5C%5C%5C%22%2C%5C%5C%5C%22ig_its_inappropriate%5C%5C%5C%22%2C%5C%5C%5C%22ig_nudity_v2%5C%5C%5C%22%5D%2C%5C%5C%5C%22object%5C%5C%5C%22%3A%5C%5C%5C%22%7B%5C%5C%5C%5C%5C%5C%5C%22direct_message_thread_id%5C%5C%5C%5C%5C%5C%5C%22%3A%5C%5C%5C%5C%5C%5C%5C%22'+thread_id+'%5C%5C%5C%5C%5C%5C%5C%22%7D%5C%5C%5C%22%2C%5C%5C%5C%22reporter_id%5C%5C%5C%22%3A'+reporter_id+'%2C%5C%5C%5C%22responsible_id%5C%5C%5C%22%3A'+responsible_id + \
-                            '%2C%5C%5C%5C%22locale%5C%5C%5C%22%3A%5C%5C%5C%22en_US%5C%5C%5C%22%2C%5C%5C%5C%22app_platform%5C%5C%5C%22%3A1%2C%5C%5C%5C%22extra_data%5C%5C%5C%22%3A%7B%5C%5C%5C%22container_module%5C%5C%5C%22%3A%5C%5C%5C%22direct_thread_info%5C%5C%5C%22%2C%5C%5C%5C%22app_version%5C%5C%5C%22%3A%5C%5C%5C%22%28151%2C+0%2C+0%2C+23%2C+120%29%5C%5C%5C%22%2C%5C%5C%5C%22is_dark_mode%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22app_id%5C%5C%5C%22%3A567067343352427%2C%5C%5C%5C%22sentry_feature_map%5C%5C%5C%22%3A%5C%5C%5C%22'+mapp + \
-                            '%5C%5C%5C%5C%5C%5C%5C%2F9rLE%5C%5C%5C%5C%5C%5C%5C%2FKB8vYXBpL3YxL3JlcG9ydHMvZ2V0X2ZyeF9wcm9tcHQvFiwWhOmCjgwA%5C%5C%5C%22%2C%5C%5C%5C%22shopping_session_id%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22logging_extra%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22is_in_holdout%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22preloading_enabled%5C%5C%5C%22%3Anull%7D%2C%5C%5C%5C%22frx_feedback_submitted%5C%5C%5C%22%3Afalse%2C%5C%5C%5C%22additional_data%5C%5C%5C%22%3A%7B%7D%7D%5C%22%2C%5C%22screen%5C%22%3A%5C%22frx_tag_selection_screen%5C%22%2C%5C%22flow_info%5C%22%3A%5C%22%7B%5C%5C%5C%22nt%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22graphql%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22enrollment_info%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22ig%5C%5C%5C%22%3A%5C%5C%5C%22%7B%5C%5C%5C%5C%5C%5C%5C%22ig_container_module%5C%5C%5C%5C%5C%5C%5C%22%3A%5C%5C%5C%5C%5C%5C%5C%22direct_thread_info%5C%5C%5C%5C%5C%5C%5C%22%7D%5C%5C%5C%22%2C%5C%5C%5C%22session_id%5C%5C%5C%22%3A%5C%5C%5C%2249df79ea-9959-4755-b927-3cfa655fe624%5C%5C%5C%22%7D%5C%22%2C%5C%22previous_state%5C%22%3Anull%7D%22%7D&is_dark_mode=true&frx_prompt_request_type=2&action_type=2'
-
-                    elif self.reptp == 'ig_drugs_v3':
-                        data = 'selected_tag_types=%5B%22ig_drugs_v3%22%5D&_csrftoken=MdIQ1T8gXmbS0F1va8E4W1IGCCR3hCci&_uuid=2461308a-4663-4549-8e82-80bf06c965a3&context=%7B%22tags%22%3A%5B%22ig_its_inappropriate_v1%22%2C%22ig_report_account%22%2C%22ig_its_inappropriate%22%2C%22ig_sale_of_illegal_or_regulated_goods_v3%22%5D%2C%22ixt_context_from_www%22%3A%22%7B%5C%22schema%5C%22%3A%5C%22ig_frx%5C%22%2C%5C%22session%5C%22%3A%5C%22%7B%5C%5C%5C%22location%5C%5C%5C%22%3A%5C%5C%5C%22id_direct_thread%5C%5C%5C%22%2C%5C%5C%5C%22entry_point%5C%5C%5C%22%3A%5C%5C%5C%22chevron_button%5C%5C%5C%22%2C%5C%5C%5C%22session_id%5C%5C%5C%22%3A%5C%5C%5C%22d3a27e71-675f-4e24-83b8-85caa92da135%5C%5C%5C%22%2C%5C%5C%5C%22tags%5C%5C%5C%22%3A%5B%5C%5C%5C%22ig_its_inappropriate_v1%5C%5C%5C%22%2C%5C%5C%5C%22ig_report_account%5C%5C%5C%22%2C%5C%5C%5C%22ig_its_inappropriate%5C%5C%5C%22%2C%5C%5C%5C%22ig_sale_of_illegal_or_regulated_goods_v3%5C%5C%5C%22%5D%2C%5C%5C%5C%22object%5C%5C%5C%22%3A%5C%5C%5C%22%7B%5C%5C%5C%5C%5C%5C%5C%22direct_message_thread_id%5C%5C%5C%5C%5C%5C%5C%22%3A%5C%5C%5C%5C%5C%5C%5C%22'+thread_id+'%5C%5C%5C%5C%5C%5C%5C%22%7D%5C%5C%5C%22%2C%5C%5C%5C%22reporter_id%5C%5C%5C%22%3A'+reporter_id+'%2C%5C%5C%5C%22responsible_id%5C%5C%5C%22%3A'+responsible_id + \
-                            '%2C%5C%5C%5C%22locale%5C%5C%5C%22%3A%5C%5C%5C%22en_US%5C%5C%5C%22%2C%5C%5C%5C%22app_platform%5C%5C%5C%22%3A1%2C%5C%5C%5C%22extra_data%5C%5C%5C%22%3A%7B%5C%5C%5C%22container_module%5C%5C%5C%22%3A%5C%5C%5C%22direct_thread_info%5C%5C%5C%22%2C%5C%5C%5C%22app_version%5C%5C%5C%22%3A%5C%5C%5C%22%28151%2C+0%2C+0%2C+23%2C+120%29%5C%5C%5C%22%2C%5C%5C%5C%22is_dark_mode%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22app_id%5C%5C%5C%22%3A567067343352427%2C%5C%5C%5C%22sentry_feature_map%5C%5C%5C%22%3A%5C%5C%5C%22'+mapp + \
-                            '%5C%5C%5C%5C%5C%5C%5C%2F9rLE%5C%5C%5C%5C%5C%5C%5C%2FKB8vYXBpL3YxL3JlcG9ydHMvZ2V0X2ZyeF9wcm9tcHQvFiwWhOmCjgwA%5C%5C%5C%22%2C%5C%5C%5C%22shopping_session_id%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22logging_extra%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22is_in_holdout%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22preloading_enabled%5C%5C%5C%22%3Anull%7D%2C%5C%5C%5C%22frx_feedback_submitted%5C%5C%5C%22%3Afalse%2C%5C%5C%5C%22additional_data%5C%5C%5C%22%3A%7B%7D%7D%5C%22%2C%5C%22screen%5C%22%3A%5C%22frx_tag_selection_screen%5C%22%2C%5C%22flow_info%5C%22%3A%5C%22%7B%5C%5C%5C%22nt%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22graphql%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22enrollment_info%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22ig%5C%5C%5C%22%3A%5C%5C%5C%22%7B%5C%5C%5C%5C%5C%5C%5C%22ig_container_module%5C%5C%5C%5C%5C%5C%5C%22%3A%5C%5C%5C%5C%5C%5C%5C%22direct_thread_info%5C%5C%5C%5C%5C%5C%5C%22%7D%5C%5C%5C%22%2C%5C%5C%5C%22session_id%5C%5C%5C%22%3A%5C%5C%5C%22dcf39832-507e-4824-bfa1-18e2e5557a35%5C%5C%5C%22%7D%5C%22%2C%5C%22previous_state%5C%22%3Anull%7D%22%7D&is_dark_mode=true&frx_prompt_request_type=2&action_type=2'
-                    if self.checkBox.isChecked():
-                        try:
-                            req2 = self.r.post(
-                                "https://i.instagram.com/api/v1/reports/get_frx_prompt/", headers=self.headers, cookies=cki, data=data, proxies=self.random_prx())
-                            if '"status":"ok"' in req2.text:
-                                self.done += 1
-                            else:
-                                self.bad += 1
-
-                            mylist.append(
+                     self.report_prf(target_id, cki)
+                    
+                     mylist.append(
                                 f"done : {self.done} , bad : {self.bad} , reporing ... ")
-                            time.sleep(2)
-                        except:
-                            self.bad += 1
-                            mylist.append(
-                                f"done : {self.done} , bad : {self.bad} , reporing ... ")
-                    else:
-                        req2 = self.r.post(
-                            "https://i.instagram.com/api/v1/reports/get_frx_prompt/", headers=self.headers, cookies=cki, data=data)
-                        if '"status":"ok"' in req2.text:
-                            self.done += 1
-                        else:
-                            self.bad += 1
-
-                        mylist.append(
-                            f"done : {self.done} , bad : {self.bad} , reporing ... ")
-                        time.sleep(2)
+                     time.sleep(2)
+                       
+                    
 
     def report_story(self):
         listrep = ['spam', 'self', 'hate', 'sex', 'drugs', 'bully', 'violence']
