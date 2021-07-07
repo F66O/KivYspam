@@ -215,7 +215,7 @@ class MyApp(QWidget, Ui_MainWindow):
                 autopy.alert.alert("You cant Report This Person!!")
             else:
                 req_id = self.r.get('https://www.instagram.com/'+target,cookies=cookies).text
-                idd = re.search(r'"id":"(.*?)"').group(1)
+                idd = re.search(r'"id":"(.*?)"',req_id).group(1)
                 self.targets.append(idd)
 
                 mylist.append(f"added {target} as target you can add more!")
