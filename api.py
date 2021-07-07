@@ -219,7 +219,8 @@ class MyApp(QWidget, Ui_MainWindow):
                 self.targets.append(idd)
 
                 mylist.append(f"added {target} as target you can add more!")
-        except:
+        except Exception as e:
+            print(e)
             autopy.alert.alert('no target found', "error")
 
     def reportplace(self):
