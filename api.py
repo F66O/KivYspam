@@ -210,7 +210,7 @@ class MyApp(QWidget, Ui_MainWindow):
             target = self.lineEdit_4.text()
 
         try:
-            cookies = random.choice(self.cookies)
+            cookies = self.cookies[0]
             if target in blacklist:
                 autopy.alert.alert("You cant Report This Person!!")
             else:
