@@ -214,7 +214,7 @@ class MyApp(QWidget, Ui_MainWindow):
             if target in blacklist:
                 autopy.alert.alert("You cant Report This Person!!")
             else:
-                req_id = requests.get(f'https://i.instagram.com/{target}/?__a=1',cookies=cookies)
+                req_id = requests.get(f'https://i.instagram.com/{target}/?__a=1',cookies=cookies,headers=self.headers)
                 idd = req_id.json()['logging_page_id'].split('_')[1]
                 self.targets.append(idd)
 
