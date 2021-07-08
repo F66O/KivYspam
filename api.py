@@ -208,13 +208,14 @@ class MyApp(QWidget, Ui_MainWindow):
         if self.tabWidget.currentIndex() == 1:
             mylist = self.textEdit_5
             target = self.lineEdit_4.text()
-
+            
+        cookies = self.cookies[0]
         try:
-            cookies = self.cookies[0]
+            
             if target in blacklist:
                 autopy.alert.alert("You cant Report This Person!!")
             else:
-                req_id = requests.get(f'https://i.instagram.com/{target}/?__a=1',cookies=cookies)
+                req_id = requests.get(f'https://www.instagram.com/{target}/?__a=1',cookies=cookies)
                 idd = req_id.json()['logging_page_id'].split('_')[1]
                 self.targets.append(idd)
 
