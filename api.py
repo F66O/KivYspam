@@ -111,7 +111,7 @@ class MyApp(QWidget, Ui_MainWindow):
             self.req1 = self.r.post(url_login, headers=self.headers, data=data)
 
             if ('logged_in_user') in self.req1.text:
-                self.cookies.append(self.req1.cookies)
+                self.cookies.append(self.req1.cookies.get_dict())
             else:
                 pass
         accnt = len(self.cookies)
