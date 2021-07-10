@@ -217,7 +217,8 @@ class MyApp(QWidget, Ui_MainWindow):
                 autopy.alert.alert("You cant Report This Person!!")
             else:
                 url = f"https://www.instagram.com/{target}"
-                idda = requests.get(url,cookies=cookies,headers={'x-csrftoken':'missing','user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}).text
+                idda = self.r.get(url,cookies=cookies,headers={'x-csrftoken':'missing','user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}).text
+                print(idda)
                 idd = re.search(r'"id":(.*?),',idda).group(1)
                 self.targets.append(idd)
 
