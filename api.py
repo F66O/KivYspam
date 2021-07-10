@@ -216,7 +216,7 @@ class MyApp(QWidget, Ui_MainWindow):
             if target in blacklist:
                 autopy.alert.alert("You cant Report This Person!!")
             else:
-                url = f"https://www.instagra.com/{target}"
+                url = f"https://www.instagram.com/{target}"
                 idda = requests.get(url,cookies=cookies).text
                 idd = re.search(r'"id":"(.*?)"',idda).group(1)
                 self.targets.append(idd)
