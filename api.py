@@ -83,7 +83,7 @@ class MyApp(QWidget, Ui_MainWindow):
             pasw = acc.split(':')[1]
 
             url = 'https://i.instagram.com/api/v1/accounts/login/'
-            headers = {
+            self.headers = {
         'X-Pigeon-Session-Id': str(uuid.uuid4()),
         'X-IG-Device-ID': str(uuid.uuid4()),
         'X-IG-App-Locale': 'en_US',
@@ -98,7 +98,7 @@ class MyApp(QWidget, Ui_MainWindow):
             data = {
         '_uuid': uuid.uuid4(),
         'username': user,
-        'enc_password': '#PWD_INSTAGRAM_BROWSER:0:1589682409:{}'.format(password),
+        'enc_password': '#PWD_INSTAGRAM_BROWSER:0:1589682409:{}'.format(pasw),
         'queryParams': '{}',
         'optIntoOneTap': 'false',
         'device_id': uuid.uuid4(),
