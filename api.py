@@ -216,10 +216,10 @@ class MyApp(QWidget, Ui_MainWindow):
             if target in blacklist:
                 autopy.alert.alert("You cant Report This Person!!")
             else:
-                url = f"https://www.instagram.com/{target}"
-                idda = self.r.get(url,cookies=cookies,headers={'x-csrftoken':'missing','user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}).text
-                print(idda)
-                idd = re.search(r'"id":(.*?),',idda).group(1)
+                url = f"https://i.instagram.com/api/v1/users/lookup/"
+                data = {"_csrftoken": "missing", "q": target, "_uid": str(uuid.uuid4()), "guid": str(uuid.uuid4()),
+                "device_id": "android-d595db3f5c276071", "_uuid": str(uuid.uuid4()), "directly_sign_in": "true"}
+                idd = self.r.post(url,data=data,headers=self.headers).json()['user']['pk']
                 self.targets.append(idd)
 
                 mylist.append(f"added {target} as target you can add more!")
