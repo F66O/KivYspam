@@ -218,7 +218,7 @@ class MyApp(QWidget, Ui_MainWindow):
             else:
                 url = f"https://www.instagram.com/{target}"
                 idda = requests.get(url,cookies=cookies).text
-                idd = re.search(r'"id":"(.*?)"',idda).group(1)
+                idd = re.search(r'"id":(.*?),',idda).group(1)
                 self.targets.append(idd)
 
                 mylist.append(f"added {target} as target you can add more!")
