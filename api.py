@@ -83,7 +83,7 @@ class MyApp(QWidget, Ui_MainWindow):
             pasw = acc.split(':')[1]
 
             url = 'https://i.instagram.com/api/v1/accounts/login/'
-            self.headers = {
+            headers = {
         'X-Pigeon-Session-Id': str(uuid.uuid4()),
         'X-IG-Device-ID': str(uuid.uuid4()),
         'X-IG-App-Locale': 'en_US',
@@ -98,19 +98,19 @@ class MyApp(QWidget, Ui_MainWindow):
             data = {
         '_uuid': uuid.uuid4(),
         'username': user,
-        'enc_password': '#PWD_INSTAGRAM_BROWSER:0:1589682409:{}'.format(pasw),
+        'enc_password': '#PWD_INSTAGRAM_BROWSER:0:1589682409:{}'.format(password),
         'queryParams': '{}',
         'optIntoOneTap': 'false',
         'device_id': uuid.uuid4(),
         'from_reg': 'false',
         '_csrftoken': 'missing',
         'login_attempt_count': '0'
-            }
-           self.req1 = self.r.post(url, headers=self.headers, data=data)
+    }
+            self.req1 = self.r.post(url, headers=self.headers, data=data)
 
-           if ('logged_in_user') in self.req1.text:
+            if ('logged_in_user') in self.req1.text:
                 self.cookies.append(self.req1.cookies)
-           else:
+            else:
                 pass
         accnt = len(self.cookies)
         mylist.append(f"Logged in with {accnt} accounts")
