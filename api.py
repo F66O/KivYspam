@@ -82,33 +82,31 @@ class MyApp(QWidget, Ui_MainWindow):
             user = acc.split(':')[0]
             pasw = acc.split(':')[1]
 
-            url_login = 'https://i.instagram.com/api/v1/accounts/login/'
-
-            self.headers = {
-                'X-Pigeon-Session-Id': self.uid,
-                'X-IG-Device-ID': self.uid,
-                'X-IG-App-Locale': 'en_US',
-                'X-IG-Device-Locale': 'en_US',
-                'X-IG-Mapped-Locale': 'en_US',
-                'X-IG-Connection-Type': 'WIFI',
-                'X-IG-Capabilities': '3brTvw8=',
-                'User-Agent': 'Instagram 165.1.0.29.119 Android (28/9; 480dpi; 1080x2137; HUAWEI; JKM-LX1; HWJKM-H; kirin710; en_US; 216817344)',
-                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-                'Host': 'i.instagram.com'
+            url = 'https://i.instagram.com/api/v1/accounts/login/'
+            headers = {
+        'X-Pigeon-Session-Id': str(uuid.uuid4()),
+        'X-IG-Device-ID': str(uuid.uuid4()),
+        'X-IG-App-Locale': 'en_US',
+        'X-IG-Device-Locale': 'en_US',
+        'X-IG-Mapped-Locale': 'en_US',
+        'X-IG-Connection-Type': 'WIFI',
+        'X-IG-Capabilities': '3brTvw8=',
+        'User-Agent': 'Instagram 148.0.0.33.121 Android (28/9; 480dpi; 1080x2137; HUAWEI; JKM-LX1; HWJKM-H; kirin710; en_US; 216817344)',
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        'Host': 'i.instagram.com'
             }
-
             data = {
-                '_uuid': self.uid,
-                'username': user,
-                'enc_password': '#PWD_INSTAGRAM_BROWSER:0:1589682409:{}'.format(pasw),
-                'queryParams': '{}',
-                'optIntoOneTap': 'false',
-                'device_id': self.uid,
-                'from_reg': 'false',
-                '_csrftoken': 'missing',
-                'login_attempt_count': '0'
+        '_uuid': uuid.uuid4(),
+        'username': user,
+        'enc_password': '#PWD_INSTAGRAM_BROWSER:0:1589682409:{}'.format(pasw),
+        'queryParams': '{}',
+        'optIntoOneTap': 'false',
+        'device_id': uuid.uuid4(),
+        'from_reg': 'false',
+        '_csrftoken': 'missing',
+        'login_attempt_count': '0'
             }
-            self.req1 = self.r.post(url_login, headers=self.headers, data=data)
+           self.req1 = self.r.post(url_login, headers=self.headers, data=data)
 
             if ('logged_in_user') in self.req1.text:
                 self.cookies.append(self.req1.cookies)
