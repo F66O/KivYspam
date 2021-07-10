@@ -111,7 +111,7 @@ class MyApp(QWidget, Ui_MainWindow):
             self.req1 = self.r.post(url_login, headers=self.headers, data=data)
 
             if ('logged_in_user') in self.req1.text:
-                self.cookies.append(self.req1.cookies)
+                self.cookies.append(self.req1.cookies.get_dict())
             else:
                 pass
         accnt = len(self.cookies)
@@ -136,7 +136,7 @@ class MyApp(QWidget, Ui_MainWindow):
         data1 = f'object_id='+target_id+'&object_type=5&entry_point=1&_csrftoken=missing&_uuid=' + \
             self.uid+'&is_dark_mode=true&frx_prompt_request_type=1&container_module=profile&location=2'
         response = requests.post(
-            'https://i.instagram.com/api/v1/reports/get_frx_prompt/',cookies=cki, data=data1)
+            'https://i.instagram.com/api/v1/reports/get_frx_prompt/',headers=cki, data=data1)
         print(response.json())
         if response.status_code != 200:
             pass
@@ -192,7 +192,7 @@ class MyApp(QWidget, Ui_MainWindow):
                 '%2C%5C%5C%5C%22locale%5C%5C%5C%22%3A%5C%5C%5C%22en_US%5C%5C%5C%22%2C%5C%5C%5C%22app_platform%5C%5C%5C%22%3A1%2C%5C%5C%5C%22extra_data%5C%5C%5C%22%3A%7B%5C%5C%5C%22container_module%5C%5C%5C%22%3A%5C%5C%5C%22profile%5C%5C%5C%22%2C%5C%5C%5C%22app_version%5C%5C%5C%22%3A%5C%5C%5C%22%28151%2C+0%2C+0%2C+23%2C+120%29%5C%5C%5C%22%2C%5C%5C%5C%22is_dark_mode%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22app_id%5C%5C%5C%22%3A567067343352427%2C%5C%5C%5C%22sentry_feature_map%5C%5C%5C%22%3A%5C%5C%5C%22'+mapp + \
                     '%3D%5C%5C%5C%22%2C%5C%5C%5C%22shopping_session_id%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22logging_extra%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22is_in_holdout%5C%5C%5C%22%3Anull%7D%2C%5C%5C%5C%22frx_feedback_submitted%5C%5C%5C%22%3Afalse%2C%5C%5C%5C%22additional_data%5C%5C%5C%22%3A%7B%7D%7D%5C%22%2C%5C%22screen%5C%22%3A%5C%22frx_tag_selection_screen%5C%22%2C%5C%22flow_info%5C%22%3A%5C%22%7B%5C%5C%5C%22nt%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22graphql%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22enrollment_info%5C%5C%5C%22%3Anull%2C%5C%5C%5C%22ig%5C%5C%5C%22%3A%5C%5C%5C%22%7B%5C%5C%5C%5C%5C%5C%5C%22ig_container_module%5C%5C%5C%5C%5C%5C%5C%22%3A%5C%5C%5C%5C%5C%5C%5C%22profile%5C%5C%5C%5C%5C%5C%5C%22%7D%5C%5C%5C%22%2C%5C%5C%5C%22session_id%5C%5C%5C%22%3A%5C%5C%5C%2272f87812-900c-4bec-a5b1-a559712f5bca%5C%5C%5C%22%7D%5C%22%2C%5C%22previous_state%5C%22%3Anull%7D%22%7D&is_dark_mode=true&frx_prompt_request_type=2&action_type=2'
         req2 = self.r.post('https://i.instagram.com/api/v1/reports/get_frx_prompt/',
-                           headers=self.headers, cookies=cki, data=data2)
+                           headers=cki,data=data2)
         if '"status":"ok"' in req2.text:
             self.done += 1
         else:
@@ -277,14 +277,31 @@ class MyApp(QWidget, Ui_MainWindow):
     def report_profile(self):
         mylist = self.textEdit
         while True:
-            for cki in self.cookies:
+            for ss in self.cookies:
+                cki = ss['sessionid']
+                headers = {
+                'X-IG-App-Locale': 'en_US',
+                'X-IG-Device-Locale': 'en_US',
+                'X-IG-Mapped-Locale': 'en_US',
+                'X-IG-Connection-Type': 'WIFI',
+                'X-IG-Capabilities': '3brTvw8=',
+                'User-Agent': 'Instagram 151.0.0.23.120 Android (26/8.0.0; 320dpi; 720x1280; samsung; SM-G930T; heroqltetmo; qcom; ar_AE; 232867993)',
+                'Accept-Language': 'en-US',
+                'IG-U-RUR': 'FTW',
+                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                'Accept-Encoding': 'gzip, deflate',
+                'Host': 'i.instagram.com',
+                'Cookie': "sessionid="+cki,
+                'Connection': 'close'
+            }
+                
                 target_id = str(random.choice(self.targets))
 
-                self.report_prf(target_id, cki)
+                self.report_prf(target_id, headers)
 
                 
                 for i in range(0, 10):
-                     self.report_prf(target_id, cki)
+                     self.report_prf(target_id, headers)
                     
                      mylist.append(
                                 f"done : {self.done} , bad : {self.bad} , reporing ... ")
