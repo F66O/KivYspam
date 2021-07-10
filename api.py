@@ -137,6 +137,7 @@ class MyApp(QWidget, Ui_MainWindow):
             self.uid+'&is_dark_mode=true&frx_prompt_request_type=1&container_module=profile&location=2'
         response = requests.post(
             'https://i.instagram.com/api/v1/reports/get_frx_prompt/', headers=self.headers, cookies=cki, data=data1)
+        print(response.json())
         if response.status_code != 200:
             pass
         reporter_id = response.json(
