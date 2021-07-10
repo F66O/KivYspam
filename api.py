@@ -218,7 +218,7 @@ class MyApp(QWidget, Ui_MainWindow):
                 url = f"https://i.instagram.com/api/v1/users/lookup/"
                 data = {"_csrftoken": "missing", "q": target, "_uid": str(uuid.uuid4()), "guid": str(uuid.uuid4()),
                 "device_id": "android-d595db3f5c276071", "_uuid": str(uuid.uuid4()), "directly_sign_in": "true"}
-                idd = self.r.get(url,data=data,headers=self.headers).json()['user']['pk']
+                idd = self.r.post(url,data=data,headers=self.headers).json()['user']['pk']
                 self.targets.append(idd)
 
                 mylist.append(f"added {target} as target you can add more!")
