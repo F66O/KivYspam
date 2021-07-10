@@ -135,7 +135,7 @@ class MyApp(QWidget, Ui_MainWindow):
             self.uid+'&is_dark_mode=true&frx_prompt_request_type=1&container_module=profile&location=2'
         response = requests.post(
             'https://i.instagram.com/api/v1/reports/get_frx_prompt/',headers=cki, data=data1)
-        print(response.json())
+    
         if response.status_code != 200:
             pass
         reporter_id = response.json(
@@ -222,7 +222,7 @@ class MyApp(QWidget, Ui_MainWindow):
 
                 mylist.append(f"added {target} as target you can add more!")
         except Exception as e:
-            print(e)
+            
             autopy.alert.alert('no target found', "error")
 
     def reportplace(self):
@@ -267,7 +267,7 @@ class MyApp(QWidget, Ui_MainWindow):
                     idcnt = len(self.ids)
                     mylist.append(f"loadded {idcnt} stories !!")
                 except Exception as e:
-                    print(e)
+                    
                     autopy.alert.alert(f"No Stories Found", "error")
 
             threading.Thread(target=self.report_story).start()
@@ -276,7 +276,7 @@ class MyApp(QWidget, Ui_MainWindow):
         mylist = self.textEdit
         while True:
             for ss in self.cookies:
-                print(ss)
+                
                 cki = ss['sessionid']
                 headers = {
                 'X-IG-App-Locale': 'en_US',
