@@ -278,6 +278,7 @@ class MyApp(QWidget, Ui_MainWindow):
         mylist = self.textEdit
         while True:
             for ss in self.cookies:
+                print(ss)
                 cki = ss['sessionid']
                 headers = {
                 'X-IG-App-Locale': 'en_US',
