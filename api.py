@@ -25,7 +25,7 @@ class MyApp(QWidget, Ui_MainWindow):
         super(MyApp, self).__init__(parent)
         QMainWindow.__init__(self)
         self.setupUi(self)
-        self.setWindowTitle("VIRUS BOT")
+        self.setWindowTitle("@SUPMXU")
         self.tabWidget.setCurrentIndex(0)
         self.done = 0
         self.bad = 0
