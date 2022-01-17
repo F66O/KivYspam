@@ -290,7 +290,7 @@ class MyApp(QWidget, Ui_MainWindow):
                     
                      mylist.append(
                                 f"done : {self.done} , bad : {self.bad} , reporing ... ")
-                     time.sleep(2)
+                     time.sleep(3)
                        
                     
 
