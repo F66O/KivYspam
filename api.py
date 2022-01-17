@@ -30,8 +30,6 @@ class MyApp(QWidget, Ui_MainWindow):
         self.done = 0
         self.bad = 0
 
-        prxfile = open("proxies.txt", 'r').read()
-
         self.grabbedThr = []
 
         self.cookies = []
@@ -56,18 +54,6 @@ class MyApp(QWidget, Ui_MainWindow):
         self.fileName, _ = QFileDialog.getOpenFileName(
             self, "Accounts file", "", "All Files (*.txt);;Python Files (*.py)", options=options)
         threading.Thread(target=self.login).start()
-
-    def random_prx(self):
-        prxf = open('proxies.txt', 'r').read().splilines()
-
-        prx = random.choice(prxf)
-
-        proxies = {
-            'http': f'http://{prx}',
-            'https': f'http://{prx}'
-        }
-
-        return proxies
 
     def login(self):
         if self.tabWidget.currentIndex() == 0:
